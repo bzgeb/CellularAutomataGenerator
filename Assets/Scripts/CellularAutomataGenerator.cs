@@ -4,6 +4,8 @@ public class CellularAutomataGenerator : MonoBehaviour
 {
     Texture2D _caTexture;
     int[,] _cellularAutomata;
+    [SerializeField] Material _material;
+    
     [SerializeField] int _width;
     [SerializeField] int _height;
     [SerializeField] string _seed;
@@ -56,12 +58,12 @@ public class CellularAutomataGenerator : MonoBehaviour
             0);
 
         meshFilter.sharedMesh = mesh;
-        meshRenderer.sharedMaterial = new Material(Shader.Find("Unlit/Texture"));
-        meshRenderer.sharedMaterial.SetTexture("_MainTex", _caTexture);
+        meshRenderer.sharedMaterial = _material;
+        _material.SetTexture("_MainTex", _caTexture);
 
         var gameCamera = FindObjectOfType<Camera>();
         displayQuad.transform.SetParent(gameCamera.transform);
-        displayQuad.transform.localPosition = new Vector3(0, 0, 150f);
+        displayQuad.transform.localPosition = new Vector3(0, 25, 150f);
     }
 
     public void OnStepButton()
