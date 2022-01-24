@@ -1,14 +1,23 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CellularAutomataGenerator : MonoBehaviour
 {
     Texture2D _caTexture;
     int[,] _cellularAutomata;
     [SerializeField] Material _material;
-    
+
     [SerializeField] int _width;
     [SerializeField] int _height;
     [SerializeField] string _seed;
+
+    [SerializeField] Slider _fillSlider;
+    [SerializeField] Text _fillSliderLabel;
+    float _fillPercent = 0.5f;
+
+    [SerializeField] Slider _liveNeighbourRequiredSlider;
+    [SerializeField] Text _liveNeighbourRequiredLabel;
+    int _liveNeighboursRequired = 4;
 
     void OnEnable()
     {
@@ -17,18 +26,15 @@ public class CellularAutomataGenerator : MonoBehaviour
             Random.InitState(_seed.GetHashCode());
         }
 
-        _cellularAutomata = new int[_width, _height];
-        for (int x = 0; x < _width; ++x)
-        {
-            for (int y = 0; y < _height; ++y)
-            {
-                _cellularAutomata[x, y] = Random.value < 0.5f ? 0 : 1;
-            }
-        }
+        _fillSlider.onValueChanged.AddListener(SetFillPercent);
+        SetFillPercent(_fillSlider.value);
 
+        _liveNeighbourRequiredSlider.onValueChanged.AddListener(SetRequiredNeighbourCount);
+        SetRequiredNeighbourCount(_liveNeighbourRequiredSlider.value);
+
+        ResetAutomata();
         _caTexture = new Texture2D(_width, _height);
         _caTexture.filterMode = FilterMode.Point;
-
         UpdateTexture();
 
         var displayQuad = new GameObject("CellularAutomata");
@@ -72,6 +78,36 @@ public class CellularAutomataGenerator : MonoBehaviour
         UpdateTexture();
     }
 
+    public void OnResetButton()
+    {
+        ResetAutomata();
+        UpdateTexture();
+    }
+
+    void SetFillPercent(float val)
+    {
+        _fillPercent = val;
+        _fillSliderLabel.text = $"Fill Percent: {val}";
+    }
+
+    void SetRequiredNeighbourCount(float val)
+    {
+        _liveNeighboursRequired = Mathf.RoundToInt(val);
+        _liveNeighbourRequiredLabel.text = $"Live Neighbour Req: {val}";
+    }
+
+    void ResetAutomata()
+    {
+        _cellularAutomata = new int[_width, _height];
+        for (int x = 0; x < _width; ++x)
+        {
+            for (int y = 0; y < _height; ++y)
+            {
+                _cellularAutomata[x, y] = Random.value > _fillPercent ? 0 : 1;
+            }
+        }
+    }
+
     void Step()
     {
         int[,] caBuffer = new int[_width, _height];
@@ -81,7 +117,7 @@ public class CellularAutomataGenerator : MonoBehaviour
             for (int y = 0; y < _height; ++y)
             {
                 int liveCellCount = _cellularAutomata[x, y] + GetNeighbourCellCount(x, y);
-                caBuffer[x, y] = liveCellCount > 4 ? 1 : 0;
+                caBuffer[x, y] = liveCellCount > _liveNeighboursRequired ? 1 : 0;
             }
         }
 
