@@ -1,5 +1,5 @@
 # Cellular Automata Generator 
 
-Read the accompanying blog post [here](). You can also play with it [here]().
+Accompanying blog post is upcoming on my website [here](https://bronsonzgeb.com/). You can also play with it [here]().
 
-![Example]()
+![Example](https://github.com/bzgeb/CellularAutomataGenerator/blob/main/CACave.png)
