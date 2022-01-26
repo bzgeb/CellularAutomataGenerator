@@ -37,39 +37,7 @@ public class CellularAutomataGenerator : MonoBehaviour
         _caTexture.filterMode = FilterMode.Point;
         UpdateTexture();
 
-        var displayQuad = new GameObject("CellularAutomata");
-        var meshFilter = displayQuad.AddComponent<MeshFilter>();
-        var meshRenderer = displayQuad.AddComponent<MeshRenderer>();
-
-        var mesh = new Mesh();
-        mesh.vertices = new Vector3[]
-        {
-            new Vector3(-_width / 2f, _height / 2f, 0.0f),
-            new Vector3(-_width / 2f, -_height / 2f, 0.0f),
-            new Vector3(_width / 2f, _height / 2f, 0.0f),
-            new Vector3(_width / 2f, -_height / 2f, 0.0f)
-        };
-
-        mesh.uv = new Vector2[]
-        {
-            new Vector2(0.0f, 0.0f),
-            new Vector2(0.0f, 1.0f),
-            new Vector2(1.0f, 0.0f),
-            new Vector2(1.0f, 1.0f)
-        };
-
-        mesh.SetIndices(
-            new int[] { 0, 2, 1, 1, 2, 3 },
-            MeshTopology.Triangles,
-            0);
-
-        meshFilter.sharedMesh = mesh;
-        meshRenderer.sharedMaterial = _material;
         _material.SetTexture("_MainTex", _caTexture);
-
-        var gameCamera = FindObjectOfType<Camera>();
-        displayQuad.transform.SetParent(gameCamera.transform);
-        displayQuad.transform.localPosition = new Vector3(-15, 0, 90f);
     }
 
     public void OnStepButton()
