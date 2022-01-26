@@ -69,7 +69,7 @@ public class CellularAutomataGenerator : MonoBehaviour
 
         var gameCamera = FindObjectOfType<Camera>();
         displayQuad.transform.SetParent(gameCamera.transform);
-        displayQuad.transform.localPosition = new Vector3(0, 25, 150f);
+        displayQuad.transform.localPosition = new Vector3(-15, 0, 90f);
     }
 
     public void OnStepButton()
